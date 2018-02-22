@@ -26,11 +26,12 @@ public class JsonReader {
                 JSONObject testcase = (JSONObject) cases.get(i);
                 String email = testcase.get("email").toString();
                 String password = (String) testcase.get("password");
-                String pageTitle = (String) testcase.get("pageTitle");
+                String element = (String) testcase.get("element");
+               // String pageTitle = (String) testcase.get("pageTitle");
                 System.out.printf("Testcase %d: email %s\t\t pass %s\n", i, email, password);
 
 
-                TestCase testc1 = new TestCase(email, password, pageTitle);
+                TestCase testc1 = new TestCase(email, password,element);
                 credentialArray[i] = testc1;
 
             }
