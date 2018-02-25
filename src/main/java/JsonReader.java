@@ -16,7 +16,8 @@ public class JsonReader {
 
         TestCase credentialArray[] = new TestCase[2];
         try {
-            Object obj = parser.parse(new FileReader("D:\\experiments\\java_projects\\Selenium_JSON_Login\\src\\credentials.json"));
+            Object obj = parser.parse(new FileReader("D:\\Git projects\\Selenium_JSON_Login\\src\\main\\java\\credentials.json"));
+
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray cases = (JSONArray) jsonObject.get("Testcases");
 
@@ -26,12 +27,13 @@ public class JsonReader {
                 JSONObject testcase = (JSONObject) cases.get(i);
                 String email = testcase.get("email").toString();
                 String password = (String) testcase.get("password");
-                String element = (String) testcase.get("element");
+                String element_text = (String) testcase.get("element_text");
+                String expectedLogin = (String) testcase.get("expectedLogin");
                // String pageTitle = (String) testcase.get("pageTitle");
                 System.out.printf("Testcase %d: email %s\t\t pass %s\n", i, email, password);
 
 
-                TestCase testc1 = new TestCase(email, password,element);
+                TestCase testc1 = new TestCase(email, password, element_text, expectedLogin);
                 credentialArray[i] = testc1;
 
             }
