@@ -19,6 +19,9 @@ public class App {
         boolean result = logintest.test(myArray);
         System.out.println(result);
 
+        Logs log = new Logs();
+
+
             }
 
 
