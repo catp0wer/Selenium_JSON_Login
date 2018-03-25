@@ -1,5 +1,3 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,7 +5,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import pageObject.HomePage;
 import pageObject.LogInPage;
 
+
 public class LoginTest {
+    Logs log;
+
+    public LoginTest(Logs log){
+        this.log = log;
+    }
 
     boolean result;
 
@@ -15,25 +19,40 @@ public class LoginTest {
 
         for (int i = 0; i < credentialArray.length; i++) {
             WebDriver driver = new FirefoxDriver();
-            driver.get("http://www.phptravels.net/login");
+            driver.get("https://wordpress.com/log-in");
+            log.logEntry("Navigate to the site.");
             LogInPage.Login(credentialArray[i].email, credentialArray[i].password,driver);
+            log.logEntry("Entered email and password");
 
-            System.out.println("Before waiting");
-
+            log.logEntry("Before waiting");
             String actualText = "";
             if(credentialArray[i].expectedLogin.equals("Login_Successfully")) {
-                WebDriverWait wait = new WebDriverWait(driver, 1000);
-                wait.until(ExpectedConditions.visibilityOf(HomePage.welcome_el(driver)));
-                System.out.println("Before text element");
-                actualText = HomePage.welcome_el(driver).getText();
+                log.logEntry("Wait before logging in");
+
+                WebDriverWait wait = new WebDriverWait(driver, 9000);
+                wait.until(ExpectedConditions.visibilityOf(HomePage.yourSites(driver)));
+                log.logEntry("Before text element");
+                actualText = HomePage.yourSites(driver).getText();
+                log.logEntry(actualText);
+
+                //wait until the element text is loaded
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                log.logEntry("Retrieving text context");
+                actualText = HomePage.yourSites(driver).getText();
+                log.logEntry(actualText);
+
             }
-            else if(credentialArray[i].expectedLogin.equals("Login_Unsuccessfully")) {
+             else if(credentialArray[i].expectedLogin.equals("Login_Unsuccessfully")) {
                 WebDriverWait wait = new WebDriverWait(driver, 1000);
                 System.out.println("Unsuccessfully");
                 wait.until(ExpectedConditions.visibilityOf(LogInPage.invalidEmailOrPassword(driver)));
                 actualText = LogInPage.invalidEmailOrPassword(driver).getText();
             }
-
+            log.logEntry(actualText);
             if (actualText.equals(credentialArray[i].element_text)) {
                 result = true;
             } else {
@@ -41,7 +60,7 @@ public class LoginTest {
             }
 
             driver.close();
-            System.out.println("Test case nb " + i + " is: " + result);
+            log.logEntry("Test case nb " + i + " is: " + result);
 
         }return result;
     }
