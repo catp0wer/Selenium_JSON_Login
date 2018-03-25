@@ -1,23 +1,34 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Logs {
+    BufferedWriter writer;
 
 public Logs(){
-        File file = new File("logs.txt");
+
+    try {
+        //deschid prin apend mode daca exista, daca nu exista il creaza
+        this.writer = new BufferedWriter(new FileWriter("logs.txt", true));
+        this.logEntry("Start of the program");
+    //  writer.write("Start of the program\n");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    }
+
+    public void logEntry(String entry){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+        Date date = new Date();
+        //System.out.println(dateFormat.format(date));
 
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-                System.out.println("File is created!");
-            } else {
-                //the boolean at the end puts the file in append mode
-                FileWriter fw = new FileWriter("logs.txt", true);
-               // BufferedWriter bw = new BufferedWriter(fw);
-                System.out.println("File already exists.");
-            }
+            this.writer.write(dateFormat.format(date) +" ");
+            this.writer.write(entry+"\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,10 +36,11 @@ public Logs(){
 
     }
 
-    public void logEntry(String entry){
-
-
-
-
+    public void closeFile(){
+        try {
+            this.writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
